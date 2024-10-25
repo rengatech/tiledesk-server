@@ -1,34 +1,35 @@
-FROM node:16
+FROM node:20.15
 
-RUN sed -i 's/stable\/updates/stable-security\/updates/' /etc/apt/sources.list
-
-
-RUN apt-get update
+# Install system dependencies for sharp
+RUN apt-get update && apt-get install -y \
+    gcc g++ make \
+    libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
 # Create app directory
 WORKDIR /usr/src/app
 
+# Argument for NPM_TOKEN
 ARG NPM_TOKEN
 
-RUN if [ "$NPM_TOKEN" ]; \
-    then RUN COPY .npmrc_ .npmrc \
-    else export SOMEVAR=world; \
+# If NPM_TOKEN is provided, create .npmrc file for private npm registry authentication
+RUN if [ -n "$NPM_TOKEN" ]; then \
+    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc; \
     fi
 
-
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Install dependencies
 RUN npm install --production
 
+# Remove the .npmrc file after installation (if created)
 RUN rm -f .npmrc
 
-# Bundle app source
+# Copy the rest of the application source
 COPY . .
 
+# Expose the app's port
 EXPOSE 3000
 
+# Start the app
 CMD [ "npm", "start" ]
-
