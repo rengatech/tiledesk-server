@@ -12,7 +12,11 @@ winston.info('VisitorCounterSchema dbUrl: '+dbUrl);
 // mongoose.set('useCreateIndex', true);
 // mongoose.set('useUnifiedTopology', true); 
 
-var conn      = mongoose.createConnection(dbUrl, { "autoIndex": true });	
+var conn      = mongoose.createConnection(dbUrl, { 
+  "autoIndex": true,
+  "useNewUrlParser": true,
+  "useUnifiedTopology": true
+ });	
 // var conn      = mongoose.connect(dbUrl, { "useNewUrlParser": true, "autoIndex": true });
 
 // db.getCollection('reqlogs').aggregate([ {$group:{_id:{id_project:"$id_project"},  "count":{$sum:1}}},{$sort:{"count":-1}}])

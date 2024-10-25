@@ -38,7 +38,6 @@ var winston = require('./config/winston');
 
 // https://bretkikehara.wordpress.com/2013/05/02/nodejs-creating-your-first-global-module/
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI || config.database;
-
 if (!databaseUri) { //TODO??
   winston.warn('DATABASE_URI not specified, falling back to localhost.');
 }
@@ -79,7 +78,6 @@ if (process.env.MONGOOSE_DEBUG==="true") {
 }
 mongoose.set('useFindAndModify', false); // https://mongoosejs.com/docs/deprecations.html#-findandmodify-
 mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', false); 
 
 // CONNECT REDIS - CHECK IT
 const { TdCache } = require('./utils/TdCache');
